@@ -9,11 +9,16 @@
          android:layout_width="match_parent"
          android:layout_height="75dp"
         android:text="Player 1"
-        android:id="@+id/p1"/>
+        android:id="@+id/p1"
+        android:visibility="invisible"/>
     <Button
          android:layout_width="match_parent"
          android:layout_height="75dp"
         android:text="player 2"
         android:id="@+id/p2"
         android:visibility="invisible"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:id="@+id/tv"/>
 </LinearLayout>

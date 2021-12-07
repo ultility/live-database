@@ -4,14 +4,17 @@ using Android.Support.V7.App;
 using Android.Runtime;
 using Android.Widget;
 using System.Threading;
+using System;
 
 namespace live_database
 {
-    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
+    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme")]
     public class MainActivity : AppCompatActivity
     {
         Button p1, p2;
         GameState gt;
+        TextView tv;
+        bool invitee;
         protected async override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -20,8 +23,14 @@ namespace live_database
             SetContentView(Resource.Layout.activity_main);
             p1 = FindViewById<Button>(Resource.Id.p1);
             p2 = FindViewById<Button>(Resource.Id.p2);
-            gt = new GameState(false);
-            await FirebaseHelper.Add(gt);
+            tv = FindViewById<TextView>(Resource.Id.tv);
+            gt = new GameState(false, Intent.GetIntExtra("room", new Random().Next()));
+            tv.Text = "room: " + gt.id;
+            invitee = Intent.GetBooleanExtra("invitee", false);
+            if (!invitee || FirebaseHelper.Get(gt.)
+            {
+                await FirebaseHelper.Add(gt);
+            }
             p1.Click += P1_Click;
             p2.Click += P2_Click;
             ThreadStart threadStart = new ThreadStart(timer);
@@ -49,13 +58,25 @@ namespace live_database
                 RunOnUiThread(() => {
                     if (gt.state)
                     {
-                        p2.Visibility = Android.Views.ViewStates.Visible;
-                        p1.Visibility = Android.Views.ViewStates.Invisible;
+                        if (invitee)
+                        {
+                            p2.Visibility = Android.Views.ViewStates.Visible;
+                        }
+                        else
+                        {
+                            p1.Visibility = Android.Views.ViewStates.Invisible;
+                        }
                     }
                     else
                     {
-                        p1.Visibility = Android.Views.ViewStates.Visible;
-                        p2.Visibility = Android.Views.ViewStates.Invisible;
+                        if (invitee)
+                        {
+                            p2.Visibility = Android.Views.ViewStates.Invisible;
+                        }
+                        else
+                        {
+                            p1.Visibility = Android.Views.ViewStates.Visible;
+                        }
                     }
                     
                });

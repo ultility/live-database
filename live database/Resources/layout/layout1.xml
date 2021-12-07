@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <EditText
+        android:layout_width="150dp"
+        android:layout_height="75dp"
+        android:id="@+id/id"
+        android:hint="room id"
+        android:inputType="numberDecimal"
+        />
+    <Button
+        android:layout_width="125dp"
+        android:layout_height="75dp"
+        android:id="@+id/enter"
+        android:text="enter"/>
+        <Button
+        android:layout_width="125dp"
+        android:layout_height="75dp"
+        android:id="@+id/start"
+        android:text="start new"/>
+</LinearLayout>
