@@ -4,6 +4,8 @@ using Android.Support.V7.App;
 using Android.Runtime;
 using Android.Widget;
 using System.Threading;
+using System;
+using System.Collections.Generic;
 
 namespace live_database
 {
@@ -20,14 +22,39 @@ namespace live_database
             SetContentView(Resource.Layout.activity_main);
             p1 = FindViewById<Button>(Resource.Id.p1);
             p2 = FindViewById<Button>(Resource.Id.p2);
-            gt = new GameState(false);
-            await FirebaseHelper.Add(gt);
+            List<GameState> gameStates = await FirebaseHelper.GetAll();
+            if (gameStates.Count == 0)
+            {
+                gt = new GameState(false, 0);
+                await FirebaseHelper.Add(gt);
+            }
+            else
+            {
+                gt = gameStates[0];
+            }
             p1.Click += P1_Click;
             p2.Click += P2_Click;
-            ThreadStart threadStart = new ThreadStart(timer);
-            Thread t = new Thread(threadStart);
-            t.Start();
+            FirebaseHelper.firebase.Child(FirebaseHelper.table_name).AsObservable<GameState>().Subscribe(d =>
+            {
+                if (gt.state == d.Object.state)
+                {
+                    RunOnUiThread(() =>
+                    {
+                        if (d.Object.state)
+                        {
+                            p2.Visibility = Android.Views.ViewStates.Visible;
+                            p1.Visibility = Android.Views.ViewStates.Invisible;
+                        }
+                        else
+                        {
+                            p1.Visibility = Android.Views.ViewStates.Visible;
+                            p2.Visibility = Android.Views.ViewStates.Invisible;
+                        }
+                    });
+                }
+            });
         }
+
 
         private void P2_Click(object sender, System.EventArgs e)
         {
@@ -41,27 +68,6 @@ namespace live_database
             FirebaseHelper.Update(gt);
         }
 
-        private async void timer()
-        {
-            while (true)
-            {
-                gt = await FirebaseHelper.Get(gt.id);
-                RunOnUiThread(() => {
-                    if (gt.state)
-                    {
-                        p2.Visibility = Android.Views.ViewStates.Visible;
-                        p1.Visibility = Android.Views.ViewStates.Invisible;
-                    }
-                    else
-                    {
-                        p1.Visibility = Android.Views.ViewStates.Visible;
-                        p2.Visibility = Android.Views.ViewStates.Invisible;
-                    }
-                    
-               });
-               Thread.Sleep(100);
-            }
-        }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);

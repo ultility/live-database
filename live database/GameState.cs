@@ -22,12 +22,6 @@ namespace live_database
 
         }
 
-        public GameState(bool state)
-        {
-            this.state = state;
-            id = new Random().Next();
-        }
-
         public GameState(bool state, int id)
         {
             this.state = state;
