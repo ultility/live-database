@@ -16,7 +16,7 @@ namespace live_database
 {
     public static class FirebaseHelper
     {
-        public static FirebaseClient firebase = new FirebaseClient("https://test-e41fe-default-rtdb.europe-west1.firebasedatabase.app/");
+        public static FirebaseClient firebase = new FirebaseClient("https://database-c2433-default-rtdb.europe-west1.firebasedatabase.app/");
         public static string table_name = "Games";
 
         public static async Task<List<GameState>> GetAll()
